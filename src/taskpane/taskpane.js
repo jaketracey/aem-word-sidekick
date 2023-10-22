@@ -279,7 +279,13 @@ export async function saveConfig() {
     Office.context.document.settings.set('productionUrl', productionUrl);
     Office.context.document.settings.set('contentUrl', contentUrl);
 
-    console.log('config saved... checking config');
+    Office.context.document.settings.saveAsync(function (asyncResult) {
+      if (asyncResult.status == Office.AsyncResultStatus.Failed) {
+        console.log('Settings save failed. Error: ' + asyncResult.error.message);
+      } else {
+        console.log('Settings saved.');
+      }
+    });
 
     checkConfig();
     await context.sync();
