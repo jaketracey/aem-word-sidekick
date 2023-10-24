@@ -103,6 +103,14 @@
 
  }
 
+ .config-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  flex-direction: column;
+ }
+
  #config {
   padding-top: 25px;
  }

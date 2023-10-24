@@ -223,7 +223,6 @@ export async function unpublish() {
     var aemRepo = Office.context.document.settings.get('aemRepo');
     var aemRepoName = aemRepo.replace('https://github.com/', '');
 
-
     // create element for a modal window and display it
     var modal = document.createElement('div');
     modal.classList.add('modal');
@@ -280,9 +279,10 @@ export async function unpublish() {
       fetch(liveUrl, {
         method: "DELETE",
       })
-        .then((response) => response.json())
+        .then((response) => {
+          return response.json();
+        })
         .then((json) => {
-
           // find element with id lastModified
           var lastModified = document.getElementById('lastModified');
           if (json.live.lastModified) {
@@ -295,7 +295,7 @@ export async function unpublish() {
           var iframe = document.getElementById('aemPage');
           // reload iframe with preview url
           iframe.src = `${json.live.url}?date=${Date.now()}`;
-        });
+        })
     });
 
 
@@ -331,7 +331,7 @@ export async function checkConfig() {
 
 
     if (aemRepo && contentUrl) {
-      getInitialState(aemRepo, contentUrl);
+      getInitialState(aemRepo);
 
       config.classList.add('d-none');
       iframe.classList.remove('d-none');
