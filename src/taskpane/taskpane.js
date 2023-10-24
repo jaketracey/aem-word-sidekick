@@ -8,7 +8,6 @@ import { async } from "regenerator-runtime";
 /* global document, Office, Word */
 
 Office.onReady((info) => {
-  console.log(info);
   if (info.host === Office.HostType.Word) {
     document.getElementById("sideload-msg").style.display = "none";
     document.getElementById("app-body").style.display = "flex";
@@ -21,9 +20,6 @@ Office.onReady((info) => {
   }
 
   checkConfig();
-  // var fileUrl = Office.context.document.url;
-  // console.log(fileUrl);
-
 });
 
 export async function run() {
@@ -45,6 +41,7 @@ export async function getInitialState() {
     var publishButton = document.getElementById("publish");
     var pageMetadata = document.getElementById("pageMetadata");
     var fileUrl = Office.context.document.url;
+    var viewProductionButton = document.getElementById("viewProduction");
 
     // convert spaces to %20 in fileUrl
     fileUrl = fileUrl.replace(' ', '%20');
@@ -65,14 +62,13 @@ export async function getInitialState() {
     fileUrl = fileUrl.toLowerCase();
 
     var liveUrl = 'https://admin.hlx.page/status/' + aemRepoName + fileUrl;
-    console.log(liveUrl);
+    // if fetch response is
+
     fetch(liveUrl, {
       method: "GET",
     })
       .then((response) => response.json())
       .then((json) => {
-
-        console.log(json);
 
         // find element with id lastModified
         var lastModified = document.getElementById('lastModified');
@@ -84,15 +80,36 @@ export async function getInitialState() {
         iframe.src = `${json.preview.url}?date=${Date.now()}`;
         iframe.addEventListener('load', handleLoad, true)
 
+        // show the view button if the page is published
+        if (json.live.url) {
+          viewProductionButton.classList.remove('d-none');
+
+          // add click event to the view button to open the page in a new tab
+          viewProductionButton.addEventListener('click', function () {
+            // if productionUrl is set in the config use it
+            if (productionUrl) {
+              // strip the domain from json.live.url
+              var url = new URL(json.live.url);
+
+              window.open(`https://${productionUrl + url.pathname}`, '_blank');
+            } else {
+              // otherwise use the live url from the api
+              window.open(json.live.url, '_blank');
+            }
+          });
+        }
+
+
+
+
         function handleLoad() {
-          console.log('iframe loaded');
           loader.classList.add('d-none');
           previewButton.textContent = "Preview";
           publishButton.textContent = "Publish";
           pageMetadata.classList.remove('d-none');
+          var pageOptions = document.getElementById('pageOptions');
+          pageOptions.classList.remove('d-none');
         }
-
-
       });
   });
 }
@@ -132,21 +149,17 @@ export async function preview() {
     fileUrl = fileUrl.toLowerCase();
 
     var liveUrl = 'https://admin.hlx.page/preview/' + aemRepoName + fileUrl;
-    console.log(liveUrl);
     fetch(liveUrl, {
       method: "POST",
     })
       .then((response) => response.json())
       .then((json) => {
 
-        console.log(json);
-
         // find element with id lastModified
         var lastModified = document.getElementById('lastModified');
         lastModified.innerHTML = `Last modified: ${json.preview.lastModified}`;
 
         function handleLoad() {
-          console.log('iframe loaded');
           loader.classList.add('d-none');
           previewButton.textContent = "Preview";
         }
@@ -198,21 +211,18 @@ export async function publish() {
     fileUrl = fileUrl.toLowerCase();
 
     var liveUrl = 'https://admin.hlx.page/live/' + aemRepoName + fileUrl;
-    console.log(liveUrl);
     fetch(liveUrl, {
       method: "POST",
       body: null,
     })
       .then((response) => response.json())
       .then((json) => {
-        console.log(json);
 
         // find element with id lastModified
         var lastModified = document.getElementById('lastModified');
         lastModified.innerHTML = `Last modified: ${json.live.lastModified}`;
 
         function handleLoad() {
-          console.log('iframe loaded');
           loader.classList.add('d-none');
           publishButton.textContent = "Publish";
 
@@ -220,9 +230,7 @@ export async function publish() {
 
         // get iframe
         var iframe = document.getElementById('aemPage');
-        console.log(iframe);
         // reload iframe with preview url
-        console.log(json);
         iframe.src = `${json.live.url}?date=${Date.now()}`;
         iframe.addEventListener('load', handleLoad, true)
       });
@@ -242,26 +250,18 @@ export async function checkConfig() {
     var productionUrl = Office.context.document.settings.get('productionUrl');
     var contentUrl = Office.context.document.settings.get('contentUrl');
 
-    var pageOptions = document.getElementById('pageOptions');
     var config = document.getElementById('config');
     var iframe = document.getElementById('aemPage');
     var header = document.getElementById('aemHeader');
-    console.log('config checked...');
 
-    console.log(aemRepo);
-    console.log(productionUrl);
-    console.log(contentUrl);
-
-
-    if (aemRepo && productionUrl && contentUrl) {
+    if (aemRepo && contentUrl) {
       getInitialState();
 
-      pageOptions.classList.remove('d-none');
       config.classList.add('d-none');
       header.classList.add('d-none');
       iframe.classList.remove('d-none');
     } else {
-      pageOptions.classList.add('d-none');
+
       config.classList.remove('d-none');
       header.classList.remove('d-none');
       iframe.classList.add('d-none');

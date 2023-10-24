@@ -28,7 +28,6 @@
         <h1 class="ms-font-xl">AEM Sidekick for Microsoft Word</h1>
     </header>
     <section id="sideload-msg" class="ms-welcome__main">
-        <strong>Loading...</strong>
     </section>
 
 
@@ -50,7 +49,7 @@
             <label for="contentUrl">Content URL</label>
             <input type="text" id="contentUrl" name="contentUrl" placeholder="e.g. https://sharepoint..." value="" />
 
-            <label for="productionUrl">Production URL</label>
+            <label for="productionUrl">Production URL (optional)</label>
             <input type="text" id="productionUrl" name="productionUrl" placeholder="" value="" />
 
             <div role="button" id="saveConfig" class="ms-welcome__action ms-Button ms-Button--hero ms-font-xl">
@@ -60,6 +59,7 @@
         </div>
 
         <div id="pageOptions" class="d-none">
+
 
             <div role="button" id="publish" class="ms-Button-label">
                 Publish
@@ -73,6 +73,9 @@
                 Settings
             </div>
 
+            <div role="button" title="View production in new window" id="viewProduction" class="ms-Button-label">
+                <i class="ms-Icon ms-Icon--OpenInNewWindow ms-font-xl"></i>
+            </div>
         </div>
 
     </main>
