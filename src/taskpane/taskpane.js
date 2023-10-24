@@ -11,16 +11,17 @@ Office.onReady((info) => {
   if (info.host === Office.HostType.Word) {
     document.getElementById("sideload-msg").style.display = "none";
     document.getElementById("app-body").style.display = "flex";
+
     document.getElementById("editConfig").onclick = editConfig;
     document.getElementById("saveConfig").onclick = saveConfig;
     document.getElementById("publish").onclick = publish;
+    document.getElementById("unpublish").onclick = unpublish;
     document.getElementById("preview").onclick = preview;
-
-
   }
 
   checkConfig();
 });
+
 
 export async function run() {
   return Word.run(async (context) => {
@@ -30,40 +31,45 @@ export async function run() {
   });
 }
 
-export async function getInitialState() {
+function getFormattedDocumentUrl() {
+  var fileUrl = Office.context.document.url;
+  var contentUrl = Office.context.document.settings.get('contentUrl');
+
+  // convert spaces to %20 in fileUrl
+  fileUrl = fileUrl.replace(' ', '%20');
+
+  // strip contentUrl from fileUrl
+  var fileUrl = fileUrl.replace(contentUrl, '');
+
+  // convert spaces to - in fileUrl
+  fileUrl = fileUrl.replace(/ /g, '-');
+
+  // remove .docx from fileUrl
+  fileUrl = fileUrl.replace('.docx', '');
+
+  // remove ’ from fileUrl
+  fileUrl = fileUrl.replace(/’/g, '-');
+
+  // convert fileUrl to lowercase
+  fileUrl = fileUrl.toLowerCase();
+
+  return fileUrl;
+}
+
+export async function getInitialState(aemRepo) {
   return Word.run(async (context) => {
-    var fileUrl = Office.context.document.url;
-    var aemRepo = Office.context.document.settings.get('aemRepo');
+    var fileUrl = getFormattedDocumentUrl();
     var aemRepoName = aemRepo.replace('https://github.com/', '');
+
     var productionUrl = Office.context.document.settings.get('productionUrl');
-    var contentUrl = Office.context.document.settings.get('contentUrl');
     var previewButton = document.getElementById("preview");
     var publishButton = document.getElementById("publish");
     var pageMetadata = document.getElementById("pageMetadata");
-    var fileUrl = Office.context.document.url;
     var viewProductionButton = document.getElementById("viewProduction");
 
-    // convert spaces to %20 in fileUrl
-    fileUrl = fileUrl.replace(' ', '%20');
-
-    // strip contentUrl from fileUrl
-    var fileUrl = fileUrl.replace(contentUrl, '');
-
-    // convert spaces to - in fileUrl
-    fileUrl = fileUrl.replace(/ /g, '-');
-
-    // remove .docx from fileUrl
-    fileUrl = fileUrl.replace('.docx', '');
-
-    // remove ’ from fileUrl
-    fileUrl = fileUrl.replace(/’/g, '-');
-
-    // convert fileUrl to lowercase
-    fileUrl = fileUrl.toLowerCase();
-
     var liveUrl = 'https://admin.hlx.page/status/' + aemRepoName + fileUrl;
-    // if fetch response is
 
+    console.log(liveUrl);
     fetch(liveUrl, {
       method: "GET",
     })
@@ -99,9 +105,6 @@ export async function getInitialState() {
           });
         }
 
-
-
-
         function handleLoad() {
           loader.classList.add('d-none');
           previewButton.textContent = "Preview";
@@ -117,36 +120,15 @@ export async function getInitialState() {
 
 
 export async function preview() {
-
   return Word.run(async (context) => {
-    var fileUrl = Office.context.document.url;
+    var fileUrl = getFormattedDocumentUrl();
     var aemRepo = Office.context.document.settings.get('aemRepo');
     var aemRepoName = aemRepo.replace('https://github.com/', '');
-    var productionUrl = Office.context.document.settings.get('productionUrl');
-    var contentUrl = Office.context.document.settings.get('contentUrl');
     var previewButton = document.getElementById("preview");
     previewButton.textContent = "Previewing...";
 
     var loader = document.getElementById("loader");
     loader.classList.remove('d-none');
-
-    // convert spaces to %20 in fileUrl
-    fileUrl = fileUrl.replace(' ', '%20');
-
-    // strip contentUrl from fileUrl
-    var fileUrl = fileUrl.replace(contentUrl, '');
-
-    // convert spaces to - in fileUrl
-    fileUrl = fileUrl.replace(/ /g, '-');
-
-    // remove .docx from fileUrl
-    fileUrl = fileUrl.replace('.docx', '');
-
-    // remove ’ from fileUrl
-    fileUrl = fileUrl.replace(/’/g, '-');
-
-    // convert fileUrl to lowercase
-    fileUrl = fileUrl.toLowerCase();
 
     var liveUrl = 'https://admin.hlx.page/preview/' + aemRepoName + fileUrl;
     fetch(liveUrl, {
@@ -180,7 +162,7 @@ export async function preview() {
 
 export async function publish() {
   return Word.run(async (context) => {
-    var fileUrl = Office.context.document.url;
+    var fileUrl = getFormattedDocumentUrl();
     var aemRepo = Office.context.document.settings.get('aemRepo');
     var aemRepoName = aemRepo.replace('https://github.com/', '');
     var productionUrl = Office.context.document.settings.get('productionUrl');
@@ -190,25 +172,6 @@ export async function publish() {
 
     var loader = document.getElementById("loader");
     loader.classList.remove('d-none');
-
-
-    // convert spaces to %20 in fileUrl
-    fileUrl = fileUrl.replace(' ', '%20');
-
-    // strip contentUrl from fileUrl
-    var fileUrl = fileUrl.replace(contentUrl, '');
-
-    // convert spaces to - in fileUrl
-    fileUrl = fileUrl.replace(/ /g, '-');
-
-    // remove .docx from fileUrl
-    fileUrl = fileUrl.replace('.docx', '');
-
-    // remove ’ from fileUrl
-    fileUrl = fileUrl.replace(/’/g, '-');
-
-    // convert fileUrl to lowercase
-    fileUrl = fileUrl.toLowerCase();
 
     var liveUrl = 'https://admin.hlx.page/live/' + aemRepoName + fileUrl;
     fetch(liveUrl, {
@@ -235,6 +198,103 @@ export async function publish() {
         iframe.addEventListener('load', handleLoad, true)
       });
 
+    await context.sync();
+
+  });
+}
+
+
+
+export async function unpublish() {
+  return Word.run(async (context) => {
+    var fileUrl = getFormattedDocumentUrl();
+    var aemRepo = Office.context.document.settings.get('aemRepo');
+    var aemRepoName = aemRepo.replace('https://github.com/', '');
+
+
+    // create element for a modal window and display it
+    var modal = document.createElement('div');
+    modal.classList.add('modal');
+    modal.classList.add('fade');
+    modal.classList.add('show');
+    modal.setAttribute('id', 'unpublishModal');
+    modal.setAttribute('tabindex', '-1');
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-labelledby', 'unpublishModalLabel');
+    modal.setAttribute('aria-hidden', 'true');
+
+    var modalContent = document.createElement('div');
+    modalContent.classList.add('modal-content');
+
+    var modalActions = document.createElement('div');
+    modalActions.classList.add('modal-actions');
+
+    modalContent.innerHTML = `<h2>Are you sure you want to unpublish this content?</h2>
+    <p>Unpublishing content will make the page not visible for users</p>`;
+
+    // create buttons for modal actions
+    var unpublishConfirmButton = document.createElement('button');
+    unpublishConfirmButton.classList.add('ms-Button-label');
+    unpublishConfirmButton.setAttribute('id', 'unpublishConfirm');
+    unpublishConfirmButton.textContent = 'Unpublish';
+
+
+
+    var unpublishCancelButton = document.createElement('button');
+    unpublishCancelButton.classList.add('ms-Button-label');
+    unpublishCancelButton.setAttribute('id', 'unpublishCancel');
+    unpublishCancelButton.setAttribute('data-dismiss', 'modal');
+    unpublishCancelButton.textContent = 'Cancel';
+
+    unpublishCancelButton.addEventListener('click', function () {
+      // close the modal
+      modal.classList.remove('show');
+      modal.setAttribute('aria-hidden', 'true');
+      modal.setAttribute('style', 'display: none');
+      modal.setAttribute('aria-modal', 'false');
+    });
+
+
+    // create events for modal actions
+    unpublishConfirmButton.addEventListener('click', function () {
+      // close the modal
+      modal.classList.remove('show');
+      modal.setAttribute('aria-hidden', 'true');
+      modal.setAttribute('style', 'display: none');
+      modal.setAttribute('aria-modal', 'false');
+
+      // sent unpublish request to hlx.page
+      var liveUrl = 'https://admin.hlx.page/live/' + aemRepoName + fileUrl;
+      fetch(liveUrl, {
+        method: "DELETE",
+      })
+        .then((response) => response.json())
+        .then((json) => {
+
+          // find element with id lastModified
+          var lastModified = document.getElementById('lastModified');
+          lastModified.innerHTML = `Last modified: ${json.live.lastModified}`;
+
+          // get iframe
+          var iframe = document.getElementById('aemPage');
+          // reload iframe with preview url
+          iframe.src = `${json.live.url}?date=${Date.now()}`;
+        });
+    });
+
+
+    // add buttons to modal actions
+    modalActions.appendChild(unpublishConfirmButton);
+    modalActions.appendChild(unpublishCancelButton);
+
+    // add modal actions to modal content
+    modalContent.appendChild(modalActions);
+
+    // add modal content to modal
+    modal.appendChild(modalContent);
+
+    // add modal to body
+    document.body.appendChild(modal);
 
 
     await context.sync();
@@ -247,21 +307,21 @@ export async function publish() {
 export async function checkConfig() {
   return Word.run(async (context) => {
     var aemRepo = Office.context.document.settings.get('aemRepo');
-    var productionUrl = Office.context.document.settings.get('productionUrl');
     var contentUrl = Office.context.document.settings.get('contentUrl');
 
     var config = document.getElementById('config');
     var iframe = document.getElementById('aemPage');
     var header = document.getElementById('aemHeader');
+    var loader = document.getElementById("loader");
+    loader.classList.remove('d-none');
 
     if (aemRepo && contentUrl) {
-      getInitialState();
+      getInitialState(aemRepo, contentUrl);
 
       config.classList.add('d-none');
       header.classList.add('d-none');
       iframe.classList.remove('d-none');
     } else {
-
       config.classList.remove('d-none');
       header.classList.remove('d-none');
       iframe.classList.add('d-none');
@@ -295,18 +355,32 @@ export async function saveConfig() {
 
 export async function editConfig() {
   return Word.run(async (context) => {
-
     var pageOptions = document.getElementById('pageOptions');
     var config = document.getElementById('config');
     var iframe = document.getElementById('aemPage');
     var header = document.getElementById('aemHeader');
     var pageMetadata = document.getElementById('pageMetadata');
 
+
+    // get the values from the settings
+    var aemRepo = Office.context.document.settings.get('aemRepo');
+    var productionUrl = Office.context.document.settings.get('productionUrl');
+    var contentUrl = Office.context.document.settings.get('contentUrl');
+
+    // populate the inputs with the values if they exist
+    if (productionUrl) {
+      document.getElementById('productionUrl').value = productionUrl;
+    }
+    document.getElementById('contentUrl').value = contentUrl;
+    document.getElementById('aemRepo').value = aemRepo;
+
+
     pageMetadata.classList.add('d-none');
     header.classList.remove('d-none');
     iframe.classList.add('d-none');
     pageOptions.classList.add('d-none');
     config.classList.remove('d-none');
+
     await context.sync();
   });
 }

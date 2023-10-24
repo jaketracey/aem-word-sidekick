@@ -83,6 +83,11 @@ module.exports = async (env, options) => {
         template: "./src/commands/commands.html",
         chunks: ["polyfill", "commands"],
       }),
+      new HtmlWebpackPlugin({
+        filename: "unpublish-dialog.html",
+        template: "./src/taskpane/unpublish-dialog.html",
+        chunks: ["polyfill", "unpublish"],
+      }),
     ],
     devServer: {
       headers: {

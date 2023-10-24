@@ -43,6 +43,10 @@
         color: #fff;
     }
 
+    .modal {
+      background: #fff;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    }
     input {
       background: rgba(0,0,0,0.3);
       color: #fff;
@@ -87,21 +91,28 @@
     border-bottom: 1px solid #eee;
  }
 
- #viewProduction {
+ #viewProduction, #editConfig {
   border: none !important;
   display: flex;
 
  }
 
+
  #pageOptions {
     display: flex;
-    grid-gap: 10px;
+    padding-left: 15px;
+    padding-right: 15px;
     position: fixed;
-    left: 15px;
+    left: 0px;
     top: 46px;
+    grid-gap: 10px;
  }
 
 
+ .dialog-wrapper {
+  padding: 15px;
+  text-align: center;
+ }
 
  .d-none {
     display: none !important;
@@ -123,13 +134,51 @@
     align-items: center;
     justify-content: center;
     box-shadow: inset 0 0 50px rgba(0,0,0,0.5);
-    font-size: 18px;
+    font-size: 14px;
  }
 
  .loader span {
     display: flex;
     align-items: center;
     justify-content: center;
+ }
+
+ .modal {
+  width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    display: flex;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.7);
+    align-items: center;
+    justify-content: center;
+ }
+
+ .modal-content {
+    background: #444;
+    color: #fff;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    padding: 20px;
+ }
+
+
+ .modal-content h2 {
+  font-size: 15px;
+  margin-top: 0;
+
+ }
+
+ .modal-content button {
+  background: transparent;
+ }
+
+ .modal-actions {
+  display: flex;
+  flex-direction: row;
+  grid-gap: 10px;
  }
 
  input[type="text"]
