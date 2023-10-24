@@ -75,11 +75,13 @@ export async function getInitialState(aemRepo) {
     })
       .then((response) => response.json())
       .then((json) => {
-
         // find element with id lastModified
         var lastModified = document.getElementById('lastModified');
-        lastModified.innerHTML = `Last modified: ${json.preview.lastModified}`;
-
+        if (json.live.lastModified) {
+          lastModified.innerHTML = `Last modified: ${json.live.lastModified}`;
+        } else {
+          lastModified.innerHTML = `No page published`;
+        }
         // get iframe
         var iframe = document.getElementById('aemPage');
         // reload iframe with preview url
@@ -273,7 +275,11 @@ export async function unpublish() {
 
           // find element with id lastModified
           var lastModified = document.getElementById('lastModified');
-          lastModified.innerHTML = `Last modified: ${json.live.lastModified}`;
+          if (json.live.lastModified) {
+            lastModified.innerHTML = `Last modified: ${json.live.lastModified}`;
+          } else {
+            lastModified.innerHTML = `No page published yet`;
+          }
 
           // get iframe
           var iframe = document.getElementById('aemPage');
@@ -313,7 +319,6 @@ export async function checkConfig() {
     var iframe = document.getElementById('aemPage');
     var header = document.getElementById('aemHeader');
     var loader = document.getElementById("loader");
-    loader.classList.remove('d-none');
 
     if (aemRepo && contentUrl) {
       getInitialState(aemRepo, contentUrl);
