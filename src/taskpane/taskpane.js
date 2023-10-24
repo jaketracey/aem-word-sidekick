@@ -68,6 +68,17 @@ export async function getInitialState(aemRepo) {
     var viewProductionButton = document.getElementById("viewProduction");
 
     var liveUrl = 'https://admin.hlx.page/status/' + aemRepoName + fileUrl;
+    var iframe = document.getElementById('aemPage');
+    iframe.classList.add('d-none');
+
+    // create loader
+    var loader = document.createElement('div');
+    loader.classList.add('small-loader');
+    loader.setAttribute('id', 'loader');
+    loader.innerHTML = `<p>Loading project configuration...</p>`;
+
+    // add loader to body
+    document.body.appendChild(loader);
 
     console.log(liveUrl);
     fetch(liveUrl, {
@@ -83,7 +94,6 @@ export async function getInitialState(aemRepo) {
           lastModified.innerHTML = `No page published`;
         }
         // get iframe
-        var iframe = document.getElementById('aemPage');
         // reload iframe with preview url
         iframe.src = `${json.preview.url}?date=${Date.now()}`;
         iframe.addEventListener('load', handleLoad, true)
@@ -108,6 +118,7 @@ export async function getInitialState(aemRepo) {
         }
 
         function handleLoad() {
+          iframe.classList.remove('d-none');
           loader.classList.add('d-none');
           previewButton.textContent = "Preview";
           publishButton.textContent = "Publish";
@@ -319,6 +330,7 @@ export async function checkConfig() {
     var iframe = document.getElementById('aemPage');
     var header = document.getElementById('aemHeader');
     var loader = document.getElementById("loader");
+
 
     if (aemRepo && contentUrl) {
       getInitialState(aemRepo, contentUrl);
