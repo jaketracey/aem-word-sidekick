@@ -9,7 +9,6 @@ import { async } from "regenerator-runtime";
 
 Office.onReady((info) => {
   if (info.host === Office.HostType.Word) {
-    document.getElementById("sideload-msg").style.display = "none";
     document.getElementById("app-body").style.display = "flex";
 
     document.getElementById("editConfig").onclick = editConfig;
@@ -328,7 +327,6 @@ export async function checkConfig() {
 
     var config = document.getElementById('config');
     var iframe = document.getElementById('aemPage');
-    var header = document.getElementById('aemHeader');
     var loader = document.getElementById("loader");
 
 
@@ -336,11 +334,9 @@ export async function checkConfig() {
       getInitialState(aemRepo, contentUrl);
 
       config.classList.add('d-none');
-      header.classList.add('d-none');
       iframe.classList.remove('d-none');
     } else {
       config.classList.remove('d-none');
-      header.classList.remove('d-none');
       iframe.classList.add('d-none');
     }
   });
@@ -375,7 +371,6 @@ export async function editConfig() {
     var pageOptions = document.getElementById('pageOptions');
     var config = document.getElementById('config');
     var iframe = document.getElementById('aemPage');
-    var header = document.getElementById('aemHeader');
     var pageMetadata = document.getElementById('pageMetadata');
 
 
@@ -393,7 +388,6 @@ export async function editConfig() {
 
 
     pageMetadata.classList.add('d-none');
-    header.classList.remove('d-none');
     iframe.classList.add('d-none');
     pageOptions.classList.add('d-none');
     config.classList.remove('d-none');
