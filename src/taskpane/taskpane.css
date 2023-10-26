@@ -14,6 +14,16 @@
         color: white;
     }
 
+    #first-run {
+      background: #2e2e2e !important;
+      border-top: 1px solid rgba(255,255,255,0.1) !important;
+      border-bottom: 1px solid rgba(255,255,255,0.1) !important;
+    }
+
+    #first-run a {
+      color: #fff !important;
+    }
+
     .ms-Button-label {
         color: white;
         border: 1px solid rgba(255,255,255,0.5) !important;
@@ -97,6 +107,12 @@
     border-bottom: 1px solid #eee;
  }
 
+ .config-error {
+  color: #ff0000;
+  padding: 12px;
+  border: 1px solid red;
+  margin-bottom: 12px;
+ }
  #viewProduction, #editConfig {
   border: none !important;
   display: flex;
@@ -109,6 +125,24 @@
   justify-content: center;
   margin-bottom: 20px;
   flex-direction: column;
+  font-size: 15px;
+ }
+
+#first-run {
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+
+    width: 100%;
+    padding: 15px 15px 18px 15px;
+    text-align: center;
+    background: #f3f2f1;
+  }
+
+ #first-run a {
+  display: flex;
+  margin-top: 10px;
+  justify-content: center;
+  color: #222;
  }
 
  #config {
@@ -160,6 +194,7 @@
     margin-top: 5px;
     align-items: center;
     justify-content: center;
+    color: #fff;
  }
 
  .modal {
@@ -243,12 +278,16 @@
  }
 
     div#pageMetadata {
-        background: #efefef;
+        background: #f3f2f1;
         padding: 10px 15px;
         position: fixed;
         top: 0;
         right: 0;
         left: 0;
+    }
+
+    #pageMetadata span {
+      display: flex;
     }
 
  .ms-welcome__main {

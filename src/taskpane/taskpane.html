@@ -23,9 +23,7 @@
 </head>
 
 <body class="ms-font-m ms-welcome ms-Fabric">
-    <div id="pageMetadata" class="d-none">
-        <span id="lastModified"></span>
-    </div>
+    <div id="pageMetadata" class="d-none"></div>
 
 
     <main id="app-body" class="ms-welcome__main" style="display: none;">
@@ -34,10 +32,15 @@
             <div class="config-header">
                 <img width="90" height="90" src="../../assets/logo-filled.png" alt="AEM" title="AEM" />
                 <h1 class="ms-font-xl">AEM Sidekick for Microsoft Word</h1>
-
+                <div id="first-run">Edit, Preview and Publish AEM Pages <br />
+                <a rel="noopener noreferrer" href="https://www.aem.live/developer/tutorial" target="_blank">Learn how to create a site</a>
+            </div>
             </div>
 
+
             <h2 class="ms-font-lg">Configure your AEM project</h2>
+
+            <div id="config-error" class="config-error d-none">Please enter both Github Repo and Content URL fields</div>
 
             <label for="aemRepo">Github Repo</label>
             <input type="text" id="aemRepo" name="aemRepo" placeholder="e.g https://github.com/..." />
@@ -55,19 +58,17 @@
         </div>
 
         <div id="pageOptions" class="d-none">
-
+            <div role="button" id="preview" class="ms-Button-label">
+                Preview
+            </div>
 
             <div role="button" id="publish" class="ms-Button-label">
                 Publish
             </div>
 
-            <div role="button" id="preview" class="ms-Button-label">
-                Preview
-            </div>
-
-            <div role="button" id="unpublish" class="ms-Button-label">
+            <!--div role="button" id="unpublish" class="ms-Button-label">
                 Unpublish
-            </div>
+            </div -->
 
             <div role="button" title="View production in new window" id="viewProduction" class="ms-Button-label">
                 <i class="ms-Icon ms-Icon--OpenInNewWindow ms-font-xl"></i>

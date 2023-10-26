@@ -14,7 +14,7 @@ Office.onReady((info) => {
     document.getElementById("editConfig").onclick = editConfig;
     document.getElementById("saveConfig").onclick = saveConfig;
     document.getElementById("publish").onclick = publish;
-    document.getElementById("unpublish").onclick = unpublish;
+    // document.getElementById("unpublish").onclick = unpublish;
     document.getElementById("preview").onclick = preview;
   }
 
@@ -65,6 +65,8 @@ export async function getInitialState(aemRepo) {
     var publishButton = document.getElementById("publish");
     var pageMetadata = document.getElementById("pageMetadata");
     var viewProductionButton = document.getElementById("viewProduction");
+    var pageOptions = document.getElementById('pageOptions');
+
 
     var liveUrl = 'https://admin.hlx.page/status/' + aemRepoName + fileUrl;
     var iframe = document.getElementById('aemPage');
@@ -79,25 +81,44 @@ export async function getInitialState(aemRepo) {
     // add loader to body
     document.body.appendChild(loader);
 
-    console.log(liveUrl);
     fetch(liveUrl, {
       method: "GET",
     })
       .then((response) => response.json())
       .then((json) => {
+        console.log(json);
         // find element with id lastModified
         var lastModified = document.getElementById('lastModified');
-        if (json.live.lastModified) {
-          lastModified.innerHTML = `Last modified: ${json.live.lastModified}`;
-        } else {
-          lastModified.innerHTML = `No page published`;
+
+        // create span for last edited
+        var lastEdited = document.createElement('span');
+        lastEdited.innerHTML = `Last edited: ${json.preview.sourceLastModified}`;
+
+        // create span for last published
+        var lastPublished = document.createElement('span');
+        lastPublished.innerHTML = `Last published: ${json.live.lastModified}`;
+
+        // create span for last previewed
+        var lastPreviewed = document.createElement('span');
+        lastPreviewed.innerHTML = `Last previewed: ${json.preview.lastModified}`;
+
+        // clear the pageMetadata
+        pageMetadata.innerHTML = '';
+
+        if (json.preview.lastModified && json.live.lastModified) {
+
+          //pageMetadata.appendChild(lastEdited);
+          pageMetadata.appendChild(lastPublished);
+          //pageMetadata.appendChild(lastPreviewed);
+         } else {
+
+          pageMetadata.innerHTML = `No page published`;
         }
         // get iframe
         // reload iframe with preview url
         iframe.src = `${json.preview.url}?date=${Date.now()}`;
         iframe.addEventListener('load', handleLoad, true)
-
-        // show the view button if the page is published
+      // show the view button if the page is published
         if (json.live.url) {
           viewProductionButton.classList.remove('d-none');
 
@@ -122,7 +143,6 @@ export async function getInitialState(aemRepo) {
           previewButton.textContent = "Preview";
           publishButton.textContent = "Publish";
           pageMetadata.classList.remove('d-none');
-          var pageOptions = document.getElementById('pageOptions');
           pageOptions.classList.remove('d-none');
         }
       });
@@ -149,9 +169,15 @@ export async function preview() {
       .then((response) => response.json())
       .then((json) => {
 
-        // find element with id lastModified
-        var lastModified = document.getElementById('lastModified');
-        lastModified.innerHTML = `Last modified: ${json.preview.lastModified}`;
+        // clear pageMetadata
+        var pageMetadata = document.getElementById('pageMetadata');
+        pageMetadata.innerHTML = '';
+
+        // create span for last edited
+        var lastEdited = document.createElement('span');
+        lastEdited.innerHTML = `Last edited: ${json.preview.sourceLastModified}`;
+
+        pageMetadata.appendChild(lastEdited);
 
         function handleLoad() {
           loader.classList.add('d-none');
@@ -193,9 +219,17 @@ export async function publish() {
       .then((response) => response.json())
       .then((json) => {
 
-        // find element with id lastModified
-        var lastModified = document.getElementById('lastModified');
-        lastModified.innerHTML = `Last modified: ${json.live.lastModified}`;
+        // clear pageMetadata
+        var pageMetadata = document.getElementById('pageMetadata');
+        pageMetadata.innerHTML = '';
+
+        console.log(json);
+
+        // create span for last edited
+        var lastEdited = document.createElement('span');
+        lastEdited.innerHTML = `Last edited: ${json.live.sourceLastModified}`;
+
+        pageMetadata.appendChild(lastEdited);
 
         function handleLoad() {
           loader.classList.add('d-none');
@@ -347,6 +381,13 @@ export async function saveConfig() {
     var aemRepo = document.getElementById('aemRepo').value;
     var productionUrl = document.getElementById('productionUrl').value;
     var contentUrl = document.getElementById('contentUrl').value;
+    var configError = document.getElementById('config-error');
+    configError.classList.add('d-none');
+
+    if(aemRepo == '' || contentUrl == '') {
+      configError.innerHTML = 'Please enter both Github repo and Content URL fields';
+      configError.classList.remove('d-none');
+    }
 
     Office.context.document.settings.set('aemRepo', aemRepo);
     Office.context.document.settings.set('productionUrl', productionUrl);
@@ -373,6 +414,8 @@ export async function editConfig() {
     var iframe = document.getElementById('aemPage');
     var pageMetadata = document.getElementById('pageMetadata');
 
+    var firstRun = document.getElementById('first-run');
+    firstRun.classList.add('d-none');
 
     // get the values from the settings
     var aemRepo = Office.context.document.settings.get('aemRepo');
