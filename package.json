@@ -1,9 +1,9 @@
 {
-  "name": "office-addin-taskpane-js",
-  "version": "0.0.1",
+  "name": "aem-word-sidekick",
+  "version": "1.0.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/OfficeDev/Office-Addin-TaskPane-JS.git"
+    "url": "https://github.com/jaketracey/aem-word-sidekick.git"
   },
   "license": "MIT",
   "config": {

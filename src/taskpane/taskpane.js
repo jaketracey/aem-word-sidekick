@@ -110,7 +110,7 @@ export async function getInitialState(aemRepo) {
           //pageMetadata.appendChild(lastEdited);
           pageMetadata.appendChild(lastPublished);
           //pageMetadata.appendChild(lastPreviewed);
-         } else {
+        } else {
 
           pageMetadata.innerHTML = `No page published`;
         }
@@ -118,7 +118,7 @@ export async function getInitialState(aemRepo) {
         // reload iframe with preview url
         iframe.src = `${json.preview.url}?date=${Date.now()}`;
         iframe.addEventListener('load', handleLoad, true)
-      // show the view button if the page is published
+        // show the view button if the page is published
         if (json.live.url) {
           viewProductionButton.classList.remove('d-none');
 
@@ -138,12 +138,14 @@ export async function getInitialState(aemRepo) {
         }
 
         function handleLoad() {
+
           iframe.classList.remove('d-none');
           loader.classList.add('d-none');
           previewButton.textContent = "Preview";
           publishButton.textContent = "Publish";
           pageMetadata.classList.remove('d-none');
           pageOptions.classList.remove('d-none');
+
         }
       });
   });
@@ -384,7 +386,7 @@ export async function saveConfig() {
     var configError = document.getElementById('config-error');
     configError.classList.add('d-none');
 
-    if(aemRepo == '' || contentUrl == '') {
+    if (aemRepo == '' || contentUrl == '') {
       configError.innerHTML = 'Please enter both Github repo and Content URL fields';
       configError.classList.remove('d-none');
     }
