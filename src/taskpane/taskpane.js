@@ -66,28 +66,18 @@ Office.onReady((info) => {
   var lastPreviewed = document.getElementById('lastPreviewed');
   var lastModified = document.getElementById('lastModified');
 
-  // create expand button for pageMetadata
-  var expandPageMetadataButton = document.createElement('button');
-  expandPageMetadataButton.classList.add('ms-Button');
-  expandPageMetadataButton.setAttribute('id', 'expandPageMetadata');
-  expandPageMetadataButton.setAttribute('type', 'button');
-  expandPageMetadataButton.setAttribute('name', 'expandPageMetadata');
-  expandPageMetadataButton.innerHTML = `<i id="pageMetadata-close" class="ms-Icon ms-Icon--ChevronDown ms-font-xl"></i>
-  `;
-  expandPageMetadataButton.addEventListener('click', function (e) {
+  pageMetadata.addEventListener('mouseover', function (e) {
     e.stopPropagation();
     pageMetadata.classList.toggle('expanded');
-    expandPageMetadataButton.classList.toggle('expanded');
   });
 
-  // get element with id metadata-expand
-  var pageMetadataExpand = document.getElementById('pageMetadata-controls');
-  // add expand button to pageMetadataExpand
-  pageMetadataExpand.appendChild(expandPageMetadataButton);
-
-
+  pageMetadata.addEventListener('mouseout', function (e) {
+    e.stopPropagation();
+    pageMetadata.classList.toggle('expanded');
+  });
 
   // create buttons for each button in buttons and attach an onclick event
+
   for (var key in buttons) {
     var button = document.createElement('button');
     button.classList.add('ms-Button');
@@ -99,8 +89,10 @@ Office.onReady((info) => {
     if (buttons[key].icon) {
       button.classList.add('ms-Button-withIcon');
       button.innerHTML = `<span class="ms-Button-icon"><i class="ms-Icon ${buttons[key].icon}"></i></span><span class="ms-Button-label">${buttons[key].label}</span>`;
+      document.getElementById('pageOptions-icons').appendChild(button);
     } else {
       button.innerHTML = `<span class="ms-Button-label">${buttons[key].label}</span>`;
+      document.getElementById('pageOptions-actions').appendChild(button);
     }
 
     // add click event to the button
@@ -112,9 +104,6 @@ Office.onReady((info) => {
       // call a function with the name of the button that was clicked
       actions[`${action}`]();
     });
-
-    // add the button to the pageOptions div
-    document.getElementById('pageOptions').appendChild(button);
 
     ///
     // All action functions live here
@@ -461,17 +450,11 @@ Office.onReady((info) => {
 
     var statusEndpoint = 'https://admin.hlx.page/status/' + aemRepoName + fileUrl;
 
-    console.log(statusEndpoint);
     fetch(statusEndpoint, {
       method: "GET",
     })
       .then((response) => response.json())
       .then((json) => {
-
-        console.log(Intl.DateTimeFormat().resolvedOptions().timeZone)
-
-        console.log(json);
-
         // convert date to local time
         var lastModifiedString = new Date(json.live.sourceLastModified).toLocaleString("en-AU", {
           day: 'numeric',
@@ -499,11 +482,11 @@ Office.onReady((info) => {
           second: '2-digit'
         });;
 
-        lastModified.innerHTML = `Last modified: ${lastModifiedString}`;
+        lastModified.innerHTML = `Modified: ${lastModifiedString}`;
 
-        lastPublished.innerHTML = `Last published: ${lastPublishedString}`;
+        lastPublished.innerHTML = `Published: ${lastPublishedString}`;
 
-        lastPreviewed.innerHTML = `Last previewed: ${lastPreviewedString}`;
+        lastPreviewed.innerHTML = `Previewed: ${lastPreviewedString}`;
       });
   }
 
