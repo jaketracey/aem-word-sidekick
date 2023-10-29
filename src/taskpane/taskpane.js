@@ -146,13 +146,12 @@ export async function getInitialState(aemRepo) {
             .then((response) => {
               if (response.status == 200) {
                 // add click event to the view button to open the page in a new tab
-            viewLibrary.addEventListener('click', function () {
-              // if productionUrl is set in the config use it
-
-                // otherwise use the live url from the api
-                window.open(`https://${url.hostname}/tools/sidekick/library.html`, '_blank');
-            });
-
+                viewLibrary.addEventListener('click', function () {
+                  // if productionUrl is set in the config use it
+                    var url = new URL(json.preview.url);
+                    // otherwise use the live url from the api
+                    window.open(`https://${url.hostname}/tools/sidekick/library.html`, '_blank');
+                });
                 viewLibrary.classList.remove('d-none');
 
               }
