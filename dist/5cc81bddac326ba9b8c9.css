@@ -16,15 +16,21 @@ body {
 
   .lds-default div {
 
-    background: #fff;
+    background: #fff !important;
   }
 
+
   .loader {
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(0, 0, 0, 0.7) !important;
+    color: #fff;
   }
 
   .loader span {
-    color: #fff;
+    color: #fff !important;
+  }
+
+  .loader.transparent {
+    background: transparent !important;
   }
 
   #first-run {
