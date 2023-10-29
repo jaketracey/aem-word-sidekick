@@ -16,6 +16,7 @@ Office.onReady((info) => {
     document.getElementById("publish").onclick = publish;
     // document.getElementById("unpublish").onclick = unpublish;
     document.getElementById("preview").onclick = preview;
+    document.getElementById("viewLibrary").onclick = viewLibrary;
   }
 
   checkConfig();
@@ -66,6 +67,7 @@ export async function getInitialState(aemRepo) {
     var pageMetadata = document.getElementById("pageMetadata");
     var viewProductionButton = document.getElementById("viewProduction");
     var pageOptions = document.getElementById('pageOptions');
+    var viewLibrary = document.getElementById('viewLibrary');
 
 
     var liveUrl = 'https://admin.hlx.page/status/' + aemRepoName + fileUrl;
@@ -135,6 +137,27 @@ export async function getInitialState(aemRepo) {
               window.open(json.live.url, '_blank');
             }
           });
+
+          // check if the library exists
+          var libraryUrl = `https://${productionUrl}/tools/sidekick/library.html`;
+          fetch(libraryUrl, {
+            method: "GET",
+          })
+            .then((response) => {
+              if (response.status == 200) {
+                // add click event to the view button to open the page in a new tab
+            viewLibrary.addEventListener('click', function () {
+              // if productionUrl is set in the config use it
+
+                // otherwise use the live url from the api
+                window.open(`https://${url.hostname}/tools/sidekick/library.html`, '_blank');
+            });
+
+                viewLibrary.classList.remove('d-none');
+
+              }
+            })
+
         }
 
         function handleLoad() {
