@@ -49,8 +49,8 @@ Office.onReady((info) => {
   };
 
   // Initialise basic variables
-  var aemRepo = Office.context.document.settings.get('aemRepo');
-  var aemRepoName = aemRepo.replace('https://github.com/', '');
+  var aemRepo;
+  var aemRepoName;
   var firstRun = document.getElementById('first-run');
   var contentUrl = Office.context.document.settings.get('contentUrl');
   var config = document.getElementById('config');
@@ -352,11 +352,24 @@ Office.onReady((info) => {
 
       checkConfig: async function () {
         return Word.run(async (context) => {
+          console.log('checking if config exists');
+
+          // read the settings
+          aemRepo = Office.context.document.settings.get('aemRepo');
+          productionUrl = Office.context.document.settings.get('productionUrl');
+          contentUrl = Office.context.document.settings.get('contentUrl');
+
           if (aemRepo && contentUrl) {
             actions.getInitialState(aemRepo);
             config.classList.add('d-none');
             iframe.classList.remove('d-none');
           } else {
+            // find element with id saveConfig
+            var saveConfig = document.getElementById('saveConfig');
+            // add click event to the saveConfig button
+            saveConfig.addEventListener('click', function () {
+              actions.saveConfig();
+            });
             config.classList.remove('d-none');
             iframe.classList.add('d-none');
           }
@@ -366,6 +379,7 @@ Office.onReady((info) => {
       getInitialState: async function () {
         return Word.run(async (context) => {
           fileUrl = getFormattedDocumentUrl();
+          aemRepo = Office.context.document.settings.get('aemRepo');
           aemRepoName = aemRepo.replace('https://github.com/', '');
           liveUrl = 'https://admin.hlx.page/live/' + aemRepoName + fileUrl;
           productionUrl = Office.context.document.settings.get('productionUrl');
@@ -400,12 +414,29 @@ Office.onReady((info) => {
           fetch(statusEndpoint, {
             method: "GET",
           })
-            .then((response) => response.json())
+            .then((response) => {
+
+              if (response.status == 404) {
+                // show the first run screen
+                firstRun.classList.remove('d-none');
+                firstRun.innerHTML = `<h3>Error - no page found.</h3><p>We can't find the page on AEM you're editing. This add in can not be used with local files. You can edit files that are assigned to your AEM project from Sharepoint.</p>`;
+                pageMetadata.classList.add('d-none');
+                pageOptions.classList.add('d-none');
+                iframe.classList.add('d-none');
+                loader.classList.add('d-none');
+                config.classList.remove('d-none');
+
+                return;
+              } else {
+                return response.json()
+
+              }
+            })
             .then((json) => {
 
               // get iframe
               // reload iframe with preview url
-              iframe.src = `${json.preview.url}?date=${Date.now()}`;
+              iframe.src = `${json.preview.url}?date = ${Date.now()} `;
               iframe.addEventListener('load', handleLoad, true);
 
               // update page metadata
@@ -439,6 +470,13 @@ Office.onReady((info) => {
               }
 
               function handleLoad() {
+
+                // find element with id saveConfig
+                var saveConfig = document.getElementById('saveConfig');
+                // add click event to the saveConfig button
+                saveConfig.addEventListener('click', function () {
+                  actions.saveConfig();
+                });
                 iframe.classList.remove('d-none');
                 loader.classList.add('d-none');
                 previewButton.textContent = "Preview";
