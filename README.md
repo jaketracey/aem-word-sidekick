@@ -1,4 +1,4 @@
-# AEM Document Based Authoring Word Add in
+# AEM Sidekick for Microsoft Word
 
 This is an addin that adds a Word sidebar that has similar functionality to the AEM Sidekick.
 
