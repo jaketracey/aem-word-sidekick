@@ -1,16 +1,13 @@
 # AEM Document Based Authoring Word Add in
 
-_This is a POC done over a couple of evenings to prove the concept, I'll completely refactor it shortly :)_
-
-This addin adds a sidebar to the Microsoft Word user interface similar to the AEM Sidekick chrome extension.
+This is an addin that adds a Word sidebar that has similar functionality to the AEM Sidekick.
 
 It allows you to setup your AEM edge delivery site and then preview and publish directly from the Word interface.
 
-TODO:
-Pass checks to be able to deploy to AppSource
-Refactor everything
-
 ## Usage
+
+You can sideload the manifest.xml from the dist folder into Microsoft Word for the latest version, or install it from AppSource.
+
 
 ### Deploy to Word desktop app
 ```
@@ -21,4 +18,3 @@ npm run start
 ```
 npm run start:web -- --document 'link-to-sharepoint-doc'
 ```
-
