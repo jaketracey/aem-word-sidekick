@@ -61,6 +61,7 @@ Office.onReady((info) => {
   var loader = document.getElementById("loader");
   var fileUrl;
   var liveUrl;
+  var previewUrl;
 
   var lastPublished = document.getElementById('lastPublished');
   var lastPreviewed = document.getElementById('lastPreviewed');
@@ -292,13 +293,6 @@ Office.onReady((info) => {
           document.getElementById('contentUrl').value = contentUrl;
           document.getElementById('aemRepo').value = aemRepo;
 
-          // find element with id saveConfig
-          var saveConfig = document.getElementById('saveConfig');
-          // add click event to the saveConfig button
-          saveConfig.addEventListener('click', function () {
-            actions.saveConfig();
-          });
-
           pageMetadata.classList.add('d-none');
           iframe.classList.add('d-none');
           pageOptions.classList.add('d-none');
@@ -343,7 +337,27 @@ Office.onReady((info) => {
         return Word.run(async (context) => {
           console.log('checking if config exists');
 
-          // read the settings
+          console.log(Office.context.document.url);
+
+          // if url doesn't contain https:// then it's a local file
+          if (Office.context.document.url.indexOf('https://') == -1) {
+
+            // show the first run screen
+            firstRun.classList.remove('d-none');
+            firstRun.innerHTML = `<h3>Local file detected</h3>
+            <p>This add in only works when using files located in Sharepoint.</p><p>Please open your file from a SharePoint location to continue.</p>`;
+            // find element of config-body id
+            var configBody = document.getElementById('config-body');
+            // hide the config
+            configBody.classList.add('d-none');
+
+            pageMetadata.classList.add('d-none');
+            pageOptions.classList.add('d-none');
+            iframe.classList.add('d-none');
+            loader.classList.add('d-none');
+            config.classList.remove('d-none');
+          }
+
           aemRepo = Office.context.document.settings.get('aemRepo');
           productionUrl = Office.context.document.settings.get('productionUrl');
           contentUrl = Office.context.document.settings.get('contentUrl');
@@ -364,7 +378,9 @@ Office.onReady((info) => {
           }
         });
       },
-
+      viewLibrary: async function () {
+        window.open(`https://${previewUrl.hostname}/tools/sidekick/library.html`, '_blank');
+      },
       getInitialState: async function () {
         return Word.run(async (context) => {
           fileUrl = getFormattedDocumentUrl();
@@ -408,7 +424,7 @@ Office.onReady((info) => {
               if (response.status == 404) {
                 // show the first run screen
                 firstRun.classList.remove('d-none');
-                firstRun.innerHTML = `<h3>Error - no page found.</h3><p>We can't find the page on AEM you're editing. This add in can not be used with local files. You can edit files that are assigned to your AEM project from Sharepoint.</p>`;
+                firstRun.innerHTML = `<h3>No page found</h3><p>We can't find the page on AEM you're editing.</p><p>Please preview the page to use this add in.</p><p>You can edit files that are assigned to your AEM project from Sharepoint.</p>`;
                 pageMetadata.classList.add('d-none');
                 pageOptions.classList.add('d-none');
                 iframe.classList.add('d-none');
@@ -436,30 +452,11 @@ Office.onReady((info) => {
                 viewProductionButton.classList.remove('d-none');
                 liveUrl = json.live.url;
 
-                var previewUrl = new URL(json.preview.url);
-
-                // check if the library exists in preview
-                var libraryUrl = `https://${previewUrl.hostname}/tools/sidekick/library.html`;
-                fetch(libraryUrl, {
-                  method: "GET",
-                })
-                  .then((response) => {
-
-                    if (response.status == 200) {
-                      // add click event to the view button to open the page in a new tab
-                      viewLibrary.addEventListener('click', function (e) {
-                        e.stopPropagation();
-                        // if productionUrl is set in the config use it
-                        // otherwise use the live url from the api
-                        window.open(`https://${previewUrl.hostname}/tools/sidekick/library.html`, '_blank');
-                      });
-                      viewLibrary.classList.remove('d-none');
-                    }
-                  })
               }
 
-              function handleLoad() {
+              previewUrl = new URL(json.preview.url);
 
+              function handleLoad() {
                 // find element with id saveConfig
                 var saveConfig = document.getElementById('saveConfig');
                 // add click event to the saveConfig button
