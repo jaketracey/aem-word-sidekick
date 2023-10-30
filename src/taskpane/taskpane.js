@@ -1,8 +1,3 @@
-/*
- * Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.
- * See LICENSE in the project root for license information.
- */
-
 import { async } from "regenerator-runtime";
 
 /* global document, Office, Word */
@@ -48,9 +43,11 @@ Office.onReady((info) => {
     },
   };
 
-  // Initialise basic variables
   var aemRepo;
   var aemRepoName;
+  var fileUrl;
+  var liveUrl;
+  var previewUrl;
   var firstRun = document.getElementById('first-run');
   var contentUrl = Office.context.document.settings.get('contentUrl');
   var config = document.getElementById('config');
@@ -59,26 +56,18 @@ Office.onReady((info) => {
   var pageOptions = document.getElementById('pageOptions');
   var productionUrl = Office.context.document.settings.get('productionUrl');
   var loader = document.getElementById("loader");
-  var fileUrl;
-  var liveUrl;
-  var previewUrl;
+
 
   var lastPublished = document.getElementById('lastPublished');
   var lastPreviewed = document.getElementById('lastPreviewed');
   var lastModified = document.getElementById('lastModified');
 
-  pageMetadata.addEventListener('mouseover', function (e) {
-    e.stopPropagation();
-    pageMetadata.classList.toggle('expanded');
-  });
-
-  pageMetadata.addEventListener('mouseout', function (e) {
+  pageMetadata.addEventListener('click', function (e) {
     e.stopPropagation();
     pageMetadata.classList.toggle('expanded');
   });
 
   // create buttons for each button in buttons and attach an onclick event
-
   for (var key in buttons) {
     var button = document.createElement('button');
     button.classList.add('ms-Button');
@@ -404,11 +393,9 @@ Office.onReady((info) => {
           var loader = document.createElement('div');
           loader.classList.add('small-loader');
           loader.setAttribute('id', 'loader');
-          loader.innerHTML = `<div id="loader" class="loader transparent">
-        <img width="50" height="50" style="margin-bottom:50px; margin-top: -150px;" src="../../assets/logo-filled.png" alt="AEM" title="AEM" />
-
+          loader.innerHTML = `<div id="loader" class="loader transparent" style="margin-top: -150px;">
         <div class="lds-default"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
-        <span>Please wait...</span>
+        <span>Loading...</span>
     </div>`;
 
           // add loader to body
@@ -522,6 +509,89 @@ Office.onReady((info) => {
         lastPublished.innerHTML = `Published: ${lastPublishedString}`;
 
         lastPreviewed.innerHTML = `Previewed: ${lastPreviewedString}`;
+
+        // remove advancedOptions if it exists
+        var advancedOptions = document.getElementById('advancedOptions');
+        if (advancedOptions) {
+          advancedOptions.remove();
+        }
+
+        // create advanced div
+        var advanced = document.createElement('div');
+        advanced.classList.add('advanced');
+        advanced.id = 'advancedOptions';
+
+
+        pageMetadata.appendChild(advanced);
+
+        // create clear cache button
+        var clearCache = document.createElement('button');
+        clearCache.classList.add('ms-Button');
+        clearCache.setAttribute('id', 'clearCache');
+        clearCache.setAttribute('type', 'button');
+        clearCache.setAttribute('name', 'clearCache');
+        clearCache.innerHTML = `<span class="ms-Button-label">Clear Cache</span>`;
+
+        // add event for clear cache
+        clearCache.addEventListener('click', function () {
+          // send clear cache request to hlx.page
+          var liveUrl = 'https://admin.hlx.page/clear/' + aemRepoName + fileUrl;
+          fetch(liveUrl, {
+            method: "POST",
+          })
+            .then((response) => response.json())
+            .then((json) => {
+              console.log(json);
+            })
+        });
+
+        advanced.appendChild(clearCache);
+
+        // create reindex button
+        var reindex = document.createElement('button');
+        reindex.classList.add('ms-Button');
+        reindex.setAttribute('id', 'reindex');
+        reindex.setAttribute('type', 'button');
+        reindex.setAttribute('name', 'reindex');
+
+        reindex.innerHTML = `<span class="ms-Button-label">Reindex</span>`;
+        // add event for reindex
+        reindex.addEventListener('click', function () {
+          // send reindex request to hlx.page
+          var liveUrl = 'https://admin.hlx.page/index/' + aemRepoName + fileUrl;
+          fetch(liveUrl, {
+            method: "POST",
+          })
+            .then((response) => response.json())
+            .then((json) => {
+              console.log(json);
+            })
+        });
+
+        advanced.appendChild(reindex);
+
+        // create deindex button
+        var deindex = document.createElement('button');
+        deindex.classList.add('ms-Button');
+        deindex.setAttribute('id', 'deindex');
+        deindex.setAttribute('type', 'button');
+        deindex.setAttribute('name', 'deindex');
+
+        deindex.innerHTML = `<span class="ms-Button-label">Deindex</span>`;
+        // add event for deindex
+        deindex.addEventListener('click', function () {
+          // send deindex request to hlx.page
+          var liveUrl = 'https://admin.hlx.page/index/' + aemRepoName + fileUrl;
+          fetch(liveUrl, {
+            method: "DELETE",
+          })
+            .then((response) => response.json())
+            .then((json) => {
+              console.log(json);
+            })
+        });
+
+        advanced.appendChild(deindex);
       });
   }
 

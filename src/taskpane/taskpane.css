@@ -56,6 +56,14 @@ body {
   #pageMetadata {
     background: #444 !important;
     color: #fff;
+
+
+  }
+
+  #pageMetadata:hover {
+    background: #555 !important;
+    cursor: pointer;
+    transition: 0.2s ease-in-out;
   }
 
   .small-loader {
@@ -118,7 +126,7 @@ label {
   font-weight: 600;
 }
 #lastModified {
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 }
 
 #lastModified span {
@@ -223,22 +231,36 @@ div#pageMetadata-controls {
   right: 0;
 }
 
-div#pageMetadata.expanded span {
-  margin-bottom: 8px;
-}
-div#pageMetadata span:not(:first-child) {
-  display: none;
-}
-
-div#pageMetadata.expanded  span:not(:first-child) {
-  display: block;
-}
-
-div#pageMetadata.expanded {
+div#pageMetadata {
   height: fit-content;
-  z-index: 2;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  z-index: 5;
 }
+
+div#pageMetadata * {
+  display: none !important;
+}
+
+div#pageMetadata *:first-child {
+  display: flex !important;
+}
+
+div#pageMetadata.expanded * {
+  display: flex !important;
+  flex-direction: column;
+}
+
+div#pageMetadata.expanded .advanced {
+  display: flex;
+  flex-direction: row;
+  padding-bottom: 5px;
+  grid-gap: 8px;
+  border-top: 1px solid #777;
+  padding-top: 15px;
+}
+
+
+
 div#pageMetadata-controls button {
   border: none !important;
   margin: -4px 13px;
@@ -356,9 +378,9 @@ input {
 
 .ms-Button {
   border: 1px solid rgba(0, 0, 0, 0.15);
-  font-size: 13px;
+  font-size: 14px;
   padding: 6px;
-  font-weight: 500;
+  font-weight: 600;
   line-height: 1;
   cursor: pointer;
   border-radius: 3px;
@@ -392,12 +414,9 @@ div#pageMetadata {
   left: 0;
   min-height: 1px;
   height: fit-content;
+  line-height: 1.5;
 }
 
-#pageMetadata span {
-  display: flex;
-  margin-right: 20px;
-}
 
 .ms-welcome__main {
   display: flex;
