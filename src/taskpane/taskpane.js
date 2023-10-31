@@ -57,6 +57,13 @@ Office.onReady((info) => {
   var productionUrl = Office.context.document.settings.get('productionUrl');
   var loader = document.getElementById("loader");
 
+  // find element with id saveConfig
+  var saveConfig = document.getElementById('saveConfig');
+  // add click event to the saveConfig button
+  saveConfig.addEventListener('click', function () {
+    actions.saveConfig();
+  });
+
 
   var lastPublished = document.getElementById('lastPublished');
   var lastPreviewed = document.getElementById('lastPreviewed');
@@ -305,15 +312,23 @@ Office.onReady((info) => {
           productionUrl = document.getElementById('productionUrl').value;
           contentUrl = document.getElementById('contentUrl').value;
 
+          // we need to check if the filename has changed, so we have to get the current fileUrl values again
+          fileUrl = getFormattedDocumentUrl();
+          liveUrl = 'https://admin.hlx.page/live/' + aemRepoName + fileUrl;
+
           Office.context.document.settings.set('aemRepo', aemRepo);
           Office.context.document.settings.set('productionUrl', productionUrl);
           Office.context.document.settings.set('contentUrl', contentUrl);
+
 
           Office.context.document.settings.saveAsync(function (asyncResult) {
             if (asyncResult.status == Office.AsyncResultStatus.Failed) {
               console.log('Settings save failed. Error: ' + asyncResult.error.message);
             } else {
               console.log('Settings saved.');
+              console.log(`aemRepo: ${aemRepo}`);
+              console.log(`productionUrl: ${productionUrl}`);
+              console.log(`contentUrl: ${contentUrl}`);
             }
           });
 
@@ -325,8 +340,6 @@ Office.onReady((info) => {
       checkConfig: async function () {
         return Word.run(async (context) => {
           console.log('checking if config exists');
-
-          console.log(Office.context.document.url);
 
           // if url doesn't contain https:// then it's a local file
           if (Office.context.document.url.indexOf('https://') == -1) {
@@ -351,17 +364,15 @@ Office.onReady((info) => {
           productionUrl = Office.context.document.settings.get('productionUrl');
           contentUrl = Office.context.document.settings.get('contentUrl');
 
+          console.log(`aemRepo: ${aemRepo}`);
+          console.log(`productionUrl: ${productionUrl}`);
+          console.log(`contentUrl: ${contentUrl}`);
+
           if (aemRepo && contentUrl) {
             actions.getInitialState(aemRepo);
             config.classList.add('d-none');
             iframe.classList.remove('d-none');
           } else {
-            // find element with id saveConfig
-            var saveConfig = document.getElementById('saveConfig');
-            // add click event to the saveConfig button
-            saveConfig.addEventListener('click', function () {
-              actions.saveConfig();
-            });
             config.classList.remove('d-none');
             iframe.classList.add('d-none');
           }
@@ -377,6 +388,7 @@ Office.onReady((info) => {
           aemRepoName = aemRepo.replace('https://github.com/', '');
           liveUrl = 'https://admin.hlx.page/live/' + aemRepoName + fileUrl;
           productionUrl = Office.context.document.settings.get('productionUrl');
+          contentUrl = Office.context.document.settings.get('productionUrl');
 
           var previewButton = document.getElementById("preview");
           var publishButton = document.getElementById("publish");
@@ -400,6 +412,10 @@ Office.onReady((info) => {
 
           // add loader to body
           document.body.appendChild(loader);
+
+          console.log(contentUrl);
+          console.log(fileUrl);
+
 
           var statusEndpoint = 'https://admin.hlx.page/status/' + aemRepoName + fileUrl;
 
@@ -425,10 +441,10 @@ Office.onReady((info) => {
               }
             })
             .then((json) => {
-
+              console.log(json);
               // get iframe
               // reload iframe with preview url
-              iframe.src = `${json.preview.url}?date = ${Date.now()} `;
+              iframe.src = `${json.preview.url}?date=${Date.now()}`;
               iframe.addEventListener('load', handleLoad, true);
 
               // update page metadata
@@ -444,12 +460,7 @@ Office.onReady((info) => {
               previewUrl = new URL(json.preview.url);
 
               function handleLoad() {
-                // find element with id saveConfig
-                var saveConfig = document.getElementById('saveConfig');
-                // add click event to the saveConfig button
-                saveConfig.addEventListener('click', function () {
-                  actions.saveConfig();
-                });
+
                 iframe.classList.remove('d-none');
                 loader.classList.add('d-none');
                 previewButton.textContent = "Preview";
@@ -522,7 +533,7 @@ Office.onReady((info) => {
         advanced.id = 'advancedOptions';
 
 
-        pageMetadata.appendChild(advanced);
+        //pageMetadata.appendChild(advanced);
 
         // create clear cache button
         var clearCache = document.createElement('button');

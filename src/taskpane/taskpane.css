@@ -126,7 +126,6 @@ label {
   font-weight: 600;
 }
 #lastModified {
-  margin-bottom: 15px;
 }
 
 #lastModified span {
@@ -256,6 +255,7 @@ div#pageMetadata.expanded .advanced {
   padding-bottom: 5px;
   grid-gap: 8px;
   border-top: 1px solid #777;
+  margin-top: 15px;
   padding-top: 15px;
 }
 
