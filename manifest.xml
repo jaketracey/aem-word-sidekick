@@ -37,7 +37,25 @@
                   <bt:Image size="32" resid="Icon.32x32"/>
                   <bt:Image size="80" resid="Icon.80x80"/>
                 </Icon>
-                <Control xsi:type="Button" id="TaskpaneButton3">
+
+                <Control xsi:type="Button" id="TaskpaneButton1">
+                  <Label resid="TaskpaneButton.Label"/>
+                  <Supertip>
+                    <Title resid="TaskpaneButton.Label"/>
+                    <Description resid="TaskpaneButton.Tooltip"/>
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="Icon.16x16"/>
+                    <bt:Image size="32" resid="Icon.32x32"/>
+                    <bt:Image size="80" resid="Icon.80x80"/>
+                  </Icon>
+                  <Action xsi:type="ShowTaskpane">
+                    <TaskpaneId>AEMSidekickButton</TaskpaneId>
+                    <SourceLocation resid="Taskpane.Url"/>
+                  </Action>
+                </Control>
+
+                <Control xsi:type="Button" id="TaskpaneButton2">
                   <Label resid="PreviewButton.Label"/>
                   <Supertip>
                     <Title resid="PreviewButton.Label"/>
@@ -54,7 +72,7 @@
                   </Action>
                 </Control>
 
-                <Control xsi:type="Button" id="TaskpaneButton">
+                <Control xsi:type="Button" id="TaskpaneButton3">
                   <Label resid="PublishButton.Label"/>
                   <Supertip>
                     <Title resid="PublishButton.Label"/>
@@ -68,23 +86,6 @@
                   <Action xsi:type="ShowTaskpane">
                     <TaskpaneId>AEMSidekickButton</TaskpaneId>
                     <SourceLocation resid="Publish.Url"/>
-                  </Action>
-                </Control>
-
-                <Control xsi:type="Button" id="TaskpaneButton2">
-                  <Label resid="TaskpaneButton.Label"/>
-                  <Supertip>
-                    <Title resid="TaskpaneButton.Label"/>
-                    <Description resid="TaskpaneButton.Tooltip"/>
-                  </Supertip>
-                  <Icon>
-                    <bt:Image size="16" resid="ConfigIcon.16x16"/>
-                    <bt:Image size="32" resid="ConfigIcon.32x32"/>
-                    <bt:Image size="80" resid="ConfigIcon.80x80"/>
-                  </Icon>
-                  <Action xsi:type="ShowTaskpane">
-                    <TaskpaneId>AEMSidekickButton</TaskpaneId>
-                    <SourceLocation resid="Taskpane.Url"/>
                   </Action>
                 </Control>
 
@@ -110,24 +111,26 @@
         <bt:Image id="PreviewIcon.80x80" DefaultValue="https://localhost:3000/assets/previewicon-80.png"/>
       </bt:Images>
       <bt:Urls>
-        <bt:Url id="GetStarted.LearnMoreUrl" DefaultValue="https://go.microsoft.com/fwlink/?LinkId=276812"/>
-        <bt:Url id="Taskpane.Url" DefaultValue="https://localhost:3000/taskpane.html?config=true"/>
+        <bt:Url id="GetStarted.LearnMoreUrl" DefaultValue="https://noice.work/contact"/>
+        <bt:Url id="Taskpane.Url" DefaultValue="https://localhost:3000/taskpane.html"/>
         <bt:Url id="Publish.Url" DefaultValue="https://localhost:3000/taskpane.html?publish=true"/>
         <bt:Url id="Preview.Url" DefaultValue="https://localhost:3000/taskpane.html?preview=true"/>
-
+        <bt:Url id="Config.Url" DefaultValue="https://localhost:3000/taskpane.html?config=true"/>
       </bt:Urls>
       <bt:ShortStrings>
         <bt:String id="GetStarted.Title" DefaultValue="Sidekick for AEM"/>
         <bt:String id="CommandsGroup.Label" DefaultValue="Sidekick for AEM"/>
-        <bt:String id="TaskpaneButton.Label" DefaultValue="Configure"/>
+        <bt:String id="TaskpaneButton.Label" DefaultValue="Show Sidebar"/>
         <bt:String id="PublishButton.Label" DefaultValue="Publish Page"/>
         <bt:String id="PreviewButton.Label" DefaultValue="Preview Page"/>
+        <bt:String id="ConfigButton.Label" DefaultValue="Configure"/>
       </bt:ShortStrings>
       <bt:LongStrings>
         <bt:String id="GetStarted.Description" DefaultValue="Sidekick for AEM is installed - please configure your project if needed."/>
         <bt:String id="TaskpaneButton.Tooltip" DefaultValue="Show the Sidekick for AEM"/>
         <bt:String id="PublishButton.Tooltip" DefaultValue="Publish the current page"/>
         <bt:String id="PreviewButton.Tooltip" DefaultValue="Preview the current page"/>
+        <bt:String id="ConfigButton.Tooltip" DefaultValue="Open sidebar configuration"/>
       </bt:LongStrings>
     </Resources>
   </VersionOverrides>
