@@ -359,7 +359,7 @@ Office.onReady((info) => {
 
             // show the first run screen
             firstRun.classList.remove('d-none');
-            firstRun.innerHTML = `<h3>Local file detected</h3>
+            firstRun.innerHTML = `<h2 class="ms-font-lg">Local file detected</h2>
             <p>This add in only supports documents located in Sharepoint.</p><p>Please open your document from a SharePoint location to continue.</p>`;
             // find element of config-body id
             var configBody = document.getElementById('config-body');
@@ -383,8 +383,8 @@ Office.onReady((info) => {
 
           if (aemRepo && contentUrl) {
 
-              actions.getInitialState(aemRepo);
-              config.classList.add('d-none');
+            actions.getInitialState(aemRepo);
+            config.classList.add('d-none');
             iframe.classList.remove('d-none');
             loader.classList.remove('d-none');
           } else {
@@ -426,72 +426,72 @@ Office.onReady((info) => {
 
 
           // if publishRibbon or previewRibbon is set to true then show the ribbon
-            // if preview is set then preview the page
-            if (previewRibbon) {
-              actions.preview();
-              smallLoader.classList.add('d-none');
-              loader.classList.add('d-none');
-            } else if(publishRibbon) {
-              actions.publish();
-              smallLoader.classList.add('d-none');
-              loader.classList.add('d-none');
-            }else if (configRibbon) {
-              console.log('yeet');
+          // if preview is set then preview the page
+          if (previewRibbon) {
+            actions.preview();
+            smallLoader.classList.add('d-none');
+            loader.classList.add('d-none');
+          } else if (publishRibbon) {
+            actions.publish();
+            smallLoader.classList.add('d-none');
+            loader.classList.add('d-none');
+          } else if (configRibbon) {
+            console.log('yeet');
             actions.editConfig();
           } else {
-          var statusEndpoint = 'https://admin.hlx.page/status/' + aemRepoName + fileUrl;
+            var statusEndpoint = 'https://admin.hlx.page/status/' + aemRepoName + fileUrl;
 
-          fetch(statusEndpoint, {
-            method: "GET",
-          })
-            .then((response) => {
-
-              if (response.status == 404) {
-                // show the first run screen
-                firstRun.classList.remove('d-none');
-                firstRun.innerHTML = `<h3>No page found</h3><p>We can't find the page on AEM you're editing.</p><p>Please preview the page to use this add in.</p><p>You can edit files that are assigned to your AEM project from Sharepoint.</p>`;
-                pageMetadata.classList.add('d-none');
-                pageOptions.classList.add('d-none');
-                iframe.classList.add('d-none');
-                loader.classList.add('d-none');
-                config.classList.remove('d-none');
-
-                return;
-              } else {
-                return response.json()
-
-              }
+            fetch(statusEndpoint, {
+              method: "GET",
             })
-            .then((json) => {
-              console.log(json);
-              // get iframe
-              // reload iframe with preview url
-              iframe.src = `${json.preview.url}?date=${Date.now()}`;
-              iframe.addEventListener('load', handleLoad, true);
+              .then((response) => {
 
-              // update page metadata
-              updatePageMetadata(json);
+                if (response.status == 404) {
+                  // show the first run screen
+                  firstRun.classList.remove('d-none');
+                  firstRun.innerHTML = `<h3>No page found</h3><p>We can't find the page on AEM you're editing.</p><p>Please preview the page to use this add in.</p><p>You can edit files that are assigned to your AEM project from Sharepoint.</p>`;
+                  pageMetadata.classList.add('d-none');
+                  pageOptions.classList.add('d-none');
+                  iframe.classList.add('d-none');
+                  loader.classList.add('d-none');
+                  config.classList.remove('d-none');
 
-              // show the view button if the page is published
-              if (json.live.url) {
-                viewProductionButton.classList.remove('d-none');
-                liveUrl = json.live.url;
+                  return;
+                } else {
+                  return response.json()
 
-              }
+                }
+              })
+              .then((json) => {
+                console.log(json);
+                // get iframe
+                // reload iframe with preview url
+                iframe.src = `${json.preview.url}?date=${Date.now()}`;
+                iframe.addEventListener('load', handleLoad, true);
 
-              previewUrl = new URL(json.preview.url);
+                // update page metadata
+                updatePageMetadata(json);
+
+                // show the view button if the page is published
+                if (json.live.url) {
+                  viewProductionButton.classList.remove('d-none');
+                  liveUrl = json.live.url;
+
+                }
+
+                previewUrl = new URL(json.preview.url);
 
 
-              function handleLoad() {
+                function handleLoad() {
 
-                iframe.classList.remove('d-none');
-                loader.classList.add('d-none');
-                previewButton.textContent = "Preview";
-                publishButton.textContent = "Publish";
-                pageMetadata.classList.remove('d-none');
-                pageOptions.classList.remove('d-none');
-              }
-            });
+                  iframe.classList.remove('d-none');
+                  loader.classList.add('d-none');
+                  previewButton.textContent = "Preview";
+                  publishButton.textContent = "Publish";
+                  pageMetadata.classList.remove('d-none');
+                  pageOptions.classList.remove('d-none');
+                }
+              });
           }
         });
       },
@@ -659,14 +659,14 @@ Office.onReady((info) => {
   }
 
 
-            // check if we're being called by the buttons in the ribbon
-            var queryString = window.location.search;
-            var urlParams = new URLSearchParams(queryString);
-            var previewRibbon = urlParams.get('preview');
-            var publishRibbon = urlParams.get('publish');
-            var configRibbon = urlParams.get('config');
+  // check if we're being called by the buttons in the ribbon
+  var queryString = window.location.search;
+  var urlParams = new URLSearchParams(queryString);
+  var previewRibbon = urlParams.get('preview');
+  var publishRibbon = urlParams.get('publish');
+  var configRibbon = urlParams.get('config');
 
-      actions.checkConfig();
+  actions.checkConfig();
 
 
 });
