@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <OfficeApp xmlns="http://schemas.microsoft.com/office/appforoffice/1.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0" xmlns:ov="http://schemas.microsoft.com/office/taskpaneappversionoverrides" xsi:type="TaskPaneApp">
-  <Id>2f6969fc-9ab7-465b-9012-7b5dbdaa3833</Id>
-  <Version>1.0.0.0</Version>
+  <Id>8f6969fc-9ab7-465b-9012-7b5dbdaa3833</Id>
+  <Version>1.1.0.0</Version>
   <ProviderName>Noice</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
   <DisplayName DefaultValue="Sidekick for AEM"/>
