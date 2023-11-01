@@ -347,7 +347,7 @@ Office.onReady((info) => {
             // show the first run screen
             firstRun.classList.remove('d-none');
             firstRun.innerHTML = `<h3>Local file detected</h3>
-            <p>This add in only works when using files located in Sharepoint.</p><p>Please open your file from a SharePoint location to continue.</p>`;
+            <p>This add in only supports documents located in Sharepoint.</p><p>Please open your document from a SharePoint location to continue.</p>`;
             // find element of config-body id
             var configBody = document.getElementById('config-body');
             // hide the config
