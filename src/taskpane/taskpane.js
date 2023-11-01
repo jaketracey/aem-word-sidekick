@@ -5,6 +5,7 @@ import { async } from "regenerator-runtime";
 Office.onReady((info) => {
   if (info.host === Office.HostType.Word) {
     document.getElementById("app-body").style.display = "flex";
+
   }
 
   /*
@@ -56,6 +57,8 @@ Office.onReady((info) => {
   var pageOptions = document.getElementById('pageOptions');
   var productionUrl = Office.context.document.settings.get('productionUrl');
   var loader = document.getElementById("loader");
+  var smallLoader = document.getElementById("small-loader");
+
 
   // find element with id saveConfig
   var saveConfig = document.getElementById('saveConfig');
@@ -126,6 +129,10 @@ Office.onReady((info) => {
               updatePageMetadata();
 
               function handleLoad() {
+                pageMetadata.classList.remove('d-none');
+                pageOptions.classList.remove('d-none');
+                iframe.classList.remove('d-none');
+                smallLoader.classList.add('d-none');
                 loader.classList.add('d-none');
                 publishButton.textContent = "Publish";
                 publishButton.removeAttribute('disabled');
@@ -160,6 +167,10 @@ Office.onReady((info) => {
               updatePageMetadata();
 
               function handleLoad() {
+                pageMetadata.classList.remove('d-none');
+                pageOptions.classList.remove('d-none');
+                iframe.classList.remove('d-none');
+                smallLoader.classList.add('d-none');
                 loader.classList.add('d-none');
                 previewButton.textContent = "Preview";
                 previewButton.removeAttribute('disabled');
@@ -289,10 +300,13 @@ Office.onReady((info) => {
           document.getElementById('contentUrl').value = contentUrl;
           document.getElementById('aemRepo').value = aemRepo;
 
+          loader.classList.add('d-none');
+          smallLoader.classList.add('d-none');
           pageMetadata.classList.add('d-none');
           iframe.classList.add('d-none');
           pageOptions.classList.add('d-none');
           config.classList.remove('d-none');
+          configRibbon = false;
 
           await context.sync();
         });
@@ -319,7 +333,6 @@ Office.onReady((info) => {
           Office.context.document.settings.set('aemRepo', aemRepo);
           Office.context.document.settings.set('productionUrl', productionUrl);
           Office.context.document.settings.set('contentUrl', contentUrl);
-
 
           Office.context.document.settings.saveAsync(function (asyncResult) {
             if (asyncResult.status == Office.AsyncResultStatus.Failed) {
@@ -369,9 +382,11 @@ Office.onReady((info) => {
           console.log(`contentUrl: ${contentUrl}`);
 
           if (aemRepo && contentUrl) {
-            actions.getInitialState(aemRepo);
-            config.classList.add('d-none');
+
+              actions.getInitialState(aemRepo);
+              config.classList.add('d-none');
             iframe.classList.remove('d-none');
+            loader.classList.remove('d-none');
           } else {
             config.classList.remove('d-none');
             iframe.classList.add('d-none');
@@ -390,6 +405,8 @@ Office.onReady((info) => {
           productionUrl = Office.context.document.settings.get('productionUrl');
           contentUrl = Office.context.document.settings.get('productionUrl');
 
+
+
           var previewButton = document.getElementById("preview");
           var publishButton = document.getElementById("publish");
           var pageMetadata = document.getElementById("pageMetadata");
@@ -401,22 +418,27 @@ Office.onReady((info) => {
           var iframe = document.getElementById('aemPage');
           iframe.classList.add('d-none');
 
-          // create loader
-          var loader = document.createElement('div');
-          loader.classList.add('small-loader');
-          loader.setAttribute('id', 'loader');
-          loader.innerHTML = `<div id="loader" class="loader transparent" style="margin-top: -150px;">
-        <div class="lds-default"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
-        <span>Loading...</span>
-    </div>`;
-
-          // add loader to body
-          document.body.appendChild(loader);
 
           console.log(contentUrl);
           console.log(fileUrl);
 
 
+
+
+          // if publishRibbon or previewRibbon is set to true then show the ribbon
+            // if preview is set then preview the page
+            if (previewRibbon) {
+              actions.preview();
+              smallLoader.classList.add('d-none');
+              loader.classList.add('d-none');
+            } else if(publishRibbon) {
+              actions.publish();
+              smallLoader.classList.add('d-none');
+              loader.classList.add('d-none');
+            }else if (configRibbon) {
+              console.log('yeet');
+            actions.editConfig();
+          } else {
           var statusEndpoint = 'https://admin.hlx.page/status/' + aemRepoName + fileUrl;
 
           fetch(statusEndpoint, {
@@ -459,6 +481,7 @@ Office.onReady((info) => {
 
               previewUrl = new URL(json.preview.url);
 
+
               function handleLoad() {
 
                 iframe.classList.remove('d-none');
@@ -469,6 +492,7 @@ Office.onReady((info) => {
                 pageOptions.classList.remove('d-none');
               }
             });
+          }
         });
       },
 
@@ -634,5 +658,15 @@ Office.onReady((info) => {
     return fileUrl;
   }
 
-  actions.checkConfig();
+
+            // check if we're being called by the buttons in the ribbon
+            var queryString = window.location.search;
+            var urlParams = new URLSearchParams(queryString);
+            var previewRibbon = urlParams.get('preview');
+            var publishRibbon = urlParams.get('publish');
+            var configRibbon = urlParams.get('config');
+
+      actions.checkConfig();
+
+
 });

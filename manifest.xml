@@ -4,7 +4,7 @@
   <Version>1.0.0.0</Version>
   <ProviderName>Noice</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
-  <DisplayName DefaultValue="AEM Sidekick"/>
+  <DisplayName DefaultValue="Sidekick for AEM"/>
   <Description DefaultValue="A plugin for using AEM Edge Delivery Services in Word"/>
   <IconUrl DefaultValue="https://localhost:3000/assets/icon-32.png"/>
   <HighResolutionIconUrl DefaultValue="https://localhost:3000/assets/icon-64.png"/>
@@ -37,8 +37,6 @@
                   <bt:Image size="32" resid="Icon.32x32"/>
                   <bt:Image size="80" resid="Icon.80x80"/>
                 </Icon>
-
-
                 <Control xsi:type="Button" id="TaskpaneButton3">
                   <Label resid="PreviewButton.Label"/>
                   <Supertip>
@@ -52,7 +50,7 @@
                   </Icon>
                   <Action xsi:type="ShowTaskpane">
                     <TaskpaneId>AEMSidekickButton</TaskpaneId>
-                    <SourceLocation resid="Taskpane.Url"/>
+                    <SourceLocation resid="Preview.Url"/>
                   </Action>
                 </Control>
 
@@ -69,7 +67,7 @@
                   </Icon>
                   <Action xsi:type="ShowTaskpane">
                     <TaskpaneId>AEMSidekickButton</TaskpaneId>
-                    <SourceLocation resid="Taskpane.Url"/>
+                    <SourceLocation resid="Publish.Url"/>
                   </Action>
                 </Control>
 
@@ -80,16 +78,15 @@
                     <Description resid="TaskpaneButton.Tooltip"/>
                   </Supertip>
                   <Icon>
-                    <bt:Image size="16" resid="Icon.16x16"/>
-                    <bt:Image size="32" resid="Icon.32x32"/>
-                    <bt:Image size="80" resid="Icon.80x80"/>
+                    <bt:Image size="16" resid="ConfigIcon.16x16"/>
+                    <bt:Image size="32" resid="ConfigIcon.32x32"/>
+                    <bt:Image size="80" resid="ConfigIcon.80x80"/>
                   </Icon>
                   <Action xsi:type="ShowTaskpane">
                     <TaskpaneId>AEMSidekickButton</TaskpaneId>
                     <SourceLocation resid="Taskpane.Url"/>
                   </Action>
                 </Control>
-
 
               </Group>
             </OfficeTab>
@@ -102,6 +99,9 @@
         <bt:Image id="Icon.16x16" DefaultValue="https://localhost:3000/assets/icon-16.png"/>
         <bt:Image id="Icon.32x32" DefaultValue="https://localhost:3000/assets/icon-32.png"/>
         <bt:Image id="Icon.80x80" DefaultValue="https://localhost:3000/assets/icon-80.png"/>
+        <bt:Image id="ConfigIcon.16x16" DefaultValue="https://localhost:3000/assets/configicon-16.png"/>
+        <bt:Image id="ConfigIcon.32x32" DefaultValue="https://localhost:3000/assets/configicon-32.png"/>
+        <bt:Image id="ConfigIcon.80x80" DefaultValue="https://localhost:3000/assets/configicon-80.png"/>
         <bt:Image id="PublishIcon.16x16" DefaultValue="https://localhost:3000/assets/publishicon-16.png"/>
         <bt:Image id="PublishIcon.32x32" DefaultValue="https://localhost:3000/assets/publishicon-32.png"/>
         <bt:Image id="PublishIcon.80x80" DefaultValue="https://localhost:3000/assets/publishicon-80.png"/>
@@ -111,18 +111,21 @@
       </bt:Images>
       <bt:Urls>
         <bt:Url id="GetStarted.LearnMoreUrl" DefaultValue="https://go.microsoft.com/fwlink/?LinkId=276812"/>
-        <bt:Url id="Taskpane.Url" DefaultValue="https://localhost:3000/taskpane.html"/>
+        <bt:Url id="Taskpane.Url" DefaultValue="https://localhost:3000/taskpane.html?config=true"/>
+        <bt:Url id="Publish.Url" DefaultValue="https://localhost:3000/taskpane.html?publish=true"/>
+        <bt:Url id="Preview.Url" DefaultValue="https://localhost:3000/taskpane.html?preview=true"/>
+
       </bt:Urls>
       <bt:ShortStrings>
-        <bt:String id="GetStarted.Title" DefaultValue="AEM Sidekick"/>
-        <bt:String id="CommandsGroup.Label" DefaultValue="Adobe Experience Manager"/>
-        <bt:String id="TaskpaneButton.Label" DefaultValue="Sidekick"/>
-        <bt:String id="PublishButton.Label" DefaultValue="Publish"/>
-        <bt:String id="PreviewButton.Label" DefaultValue="Preview"/>
+        <bt:String id="GetStarted.Title" DefaultValue="Sidekick for AEM"/>
+        <bt:String id="CommandsGroup.Label" DefaultValue="Sidekick for AEM"/>
+        <bt:String id="TaskpaneButton.Label" DefaultValue="Configure"/>
+        <bt:String id="PublishButton.Label" DefaultValue="Publish Page"/>
+        <bt:String id="PreviewButton.Label" DefaultValue="Preview Page"/>
       </bt:ShortStrings>
       <bt:LongStrings>
-        <bt:String id="GetStarted.Description" DefaultValue="AEM Sidekick is installed - open the add in to display the preview window."/>
-        <bt:String id="TaskpaneButton.Tooltip" DefaultValue="Show the AEM Sidekick"/>
+        <bt:String id="GetStarted.Description" DefaultValue="Sidekick for AEM is installed - please configure your project if needed."/>
+        <bt:String id="TaskpaneButton.Tooltip" DefaultValue="Show the Sidekick for AEM"/>
         <bt:String id="PublishButton.Tooltip" DefaultValue="Publish the current page"/>
         <bt:String id="PreviewButton.Tooltip" DefaultValue="Preview the current page"/>
       </bt:LongStrings>
