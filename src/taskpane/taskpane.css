@@ -33,8 +33,12 @@ body {
     background: transparent !important;
   }
 
+  #first-run {
+    background: #444 !important;
+  }
   #first-run a {
     color: #fff !important;
+    background: transparent !important;
   }
 
   .ms-Button {
@@ -151,9 +155,9 @@ h1 {
 }
 
 #first-run {
-  background: #444;
+  background: rgba(0,0,0,0.05);
   padding: 25px;
-  border-radius: 15px;
+  border-radius: 10px;
   margin-top: 10px;
   display: flex;
   flex-direction: column;
@@ -167,9 +171,11 @@ h1 {
   margin-top: 0;
 }
 #first-run a {
+  background: #fff;
   display: flex;
   margin-top: 10px;
   color: #222;
+  text-align: center;
  text-decoration: none;
  align-self: flex-start;
 }
