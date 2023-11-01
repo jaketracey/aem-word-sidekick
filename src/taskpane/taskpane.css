@@ -34,13 +34,11 @@ body {
   }
 
   #first-run {
-    background: #2e2e2e !important;
-    border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    background: #444 !important;
   }
-
   #first-run a {
     color: #fff !important;
+    background: transparent !important;
   }
 
   .ms-Button {
@@ -126,8 +124,8 @@ h1 {
 .ms-font-lg {
   font-size: 18px;
   font-weight: 600;
-}
-#lastModified {
+  margin-bottom: 20px;
+  margin-top: 30px;
 }
 
 #lastModified span {
@@ -157,20 +155,29 @@ h1 {
 }
 
 #first-run {
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-
-  width: 100%;
-  padding: 15px 0px;
-  text-align: center;
-  background: #f3f2f1;
+  background: rgba(0,0,0,0.05);
+  padding: 25px;
+  border-radius: 10px;
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
 }
 
+#first-run p {
+  margin-top: 0;
+}
+
+#first-run h2 {
+  margin-top: 0;
+}
 #first-run a {
+  background: #fff;
   display: flex;
   margin-top: 10px;
-  justify-content: center;
   color: #222;
+  text-align: center;
+ text-decoration: none;
+ align-self: flex-start;
 }
 
 
